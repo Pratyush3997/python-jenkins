@@ -12,17 +12,19 @@ class DurationMetrics:
     password = ''
     previousvalue = ''
     updatedvalue = ''
+    input = ''
     totalBuildDuration = 0.0
     numberOfBuilds = 0.0
     buildDurations = []
     buildTimestamps = []
     server = None
 
-    def __init__(self, username, password,previousvalue,updatedvalue):
+    def __init__(self, username, password,previousvalue,updatedvalue,input):
         self.username = username
         self.password = password
         self.previousvalue = previousvalue
         self.updatedvalue = updatedvalue
+        self.input = input
 
     def getJobDuration(self):
         # get job duration
@@ -53,7 +55,11 @@ class DurationMetrics:
         # # build_info = self.server.get_build_info('api-test', last_build_number)
         # print(build_info)
         #print(jobs)
-        regex = (r"QXMGR.*")
+        # regex_input = self.input
+        # #regex_var = 'r"' + regex_input+'"'
+        # regex_var = "r"+regex_input+'"'
+        regex = self.input
+        print(regex)
         for job in jobs:
             #assert re.match(regex, job), f'Failed on {job=} with {regex=}'
             #myJob = self.server.get_job_config(job['name'])
@@ -65,6 +71,7 @@ class DurationMetrics:
                 myJob = self.server.get_job_config(job)
                 #myConfig = myJob.get_config()
                 #print(myJob)
+                print(self.input)
                 print(self.previousvalue)
                 print(self.updatedvalue)
                 new = myJob.replace(self.previousvalue, self.updatedvalue)
@@ -119,6 +126,7 @@ def main(argv):
     password = ''
     previousvalue = sys.argv[5]
     updatedvalue = sys.argv[6]
+    input = sys.argv[7]
 
     try:
         opts, args = getopt.getopt(argv, "hu:p:", ["username=", "password="])
@@ -136,10 +144,10 @@ def main(argv):
         elif opt in ("-p", "--password"):
             password = arg
 
-    durationMetrics = DurationMetrics(username, password,previousvalue,updatedvalue)
+    durationMetrics = DurationMetrics(username, password,previousvalue,updatedvalue, input)
     durationMetrics.connectToJenkins()
     #durationMetrics.getJobDuration()
-    #durationMetrics.getJobConfig()
+    durationMetrics.getJobConfig()
     #durationMetrics.getAllJobs()
     #durationMetrics.get_value_from_string()
     #durationMetrics.newargs()
