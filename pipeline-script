@@ -1,21 +1,31 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-def py
+// def py
 
 pipeline {
     agent any
     parameters {
-        choice(name: 'JobType', choices: 'QXMgr', 'QXOne', 'QXSecond'], description: '')
-        booleanParam(name: 'ExistingSchedule', defaultValue: '', description: '')
-	booleanParam(name: 'NewSchedule', defaultValue: '', description: '')
+        choice(name: 'JobType', choices: ['QXMgr', 'QXOne', 'QXSecond'], description: '')
+        string(name: 'ExistingSchedule', defaultValue: '', description: '')
+	    string(name: 'NewSchedule', defaultValue: '', description: '')
     }
     stages {
         stage("init") {
             steps {
                 script {
-                   echo"testing"
+                   git branch: 'main', credentialsId: 'git-credentials', url: 'https://github.com/Pratyush3997/python-jenkins.git'
                 }
             }
-        }           
+        }    
+        stage("change") {
+            steps {
+                script {
+                   sh '''
+                        echo ${ExistingSchedule}
+                        python3 main.py -u jenkins123 -p 11c59cee59707984dca624de7714a4b2ea ${ExistingSchedule} ${NewSchedule} ${JobType}
+                      '''
+                }
+            }
+        }       
     }
 }
