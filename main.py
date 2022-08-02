@@ -1,7 +1,6 @@
 import re
 import xml.etree.ElementTree as ET
 import jenkins
-from jenkinsapi.jenkins import Jenkins
 import sys
 import getopt
 from datetime import datetime
