@@ -106,7 +106,7 @@ class DurationMetrics:
     def connectToJenkins(self):
 
         # connect to Jenkins server
-        self.server = jenkins.Jenkins('http://54.202.171.110:8080/', username=self.username, password=self.password)
+        self.server = jenkins.Jenkins('http://35.164.255.6:8080/', username=self.username, password=self.password)
         user = self.server.get_whoami()
         version = self.server.get_version()
 
