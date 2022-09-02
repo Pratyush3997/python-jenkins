@@ -16,7 +16,7 @@ class DurationMetrics:
     buildTimestamps = []
     server = None
 
-    # defining variables
+   
     def __init__(self, username, password,previousvalue,updatedvalue,input):
         self.username = username
         self.password = password
