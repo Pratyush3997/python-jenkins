@@ -16,6 +16,7 @@ class DurationMetrics:
     buildTimestamps = []
     server = None
 
+    # defining variables
     def __init__(self, username, password,previousvalue,updatedvalue,input):
         self.username = username
         self.password = password
@@ -24,7 +25,7 @@ class DurationMetrics:
         self.input = input
 
     def getJobDuration(self):
-        #get job duration
+        # get job duration
         jenkinsJobs = self.server.get_all_jobs()
         #print(jenkinsJobs)
         myJob = self.server.get_job_info('sample-job', 0, True)
@@ -41,7 +42,7 @@ class DurationMetrics:
             self.buildTimestamps.append(buildTimestamp)
 
     def getJobConfig(self):
-
+        #get the job configuration
         jobs = self.server.get_all_jobs(folder_depth=None)
         regex = self.input
         print(regex)
@@ -62,7 +63,8 @@ class DurationMetrics:
                 print("Out of scope jobs:"+job)
 
     def connectToJenkins(self):
-        #connect to Jenkins server
+
+        # connect to Jenkins server
         self.server = jenkins.Jenkins('http://54.202.6.181:8080/', username=self.username, password=self.password)
         user = self.server.get_whoami()
         version = self.server.get_version()
@@ -76,6 +78,7 @@ class DurationMetrics:
         return dates
 
 def main(argv):
+    # passing id, pass to login into jenkins and previousvalue, updatedvalue as arguments to set required job schedule
     username = ''
     password = ''
     previousvalue = sys.argv[5]
