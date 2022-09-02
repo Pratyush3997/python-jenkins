@@ -24,26 +24,10 @@ class DurationMetrics:
         self.updatedvalue = updatedvalue
         self.input = input
 
-    def getJobDuration(self):
-        # get job duration
-        jenkinsJobs = self.server.get_all_jobs()
-        #print(jenkinsJobs)
-        myJob = self.server.get_job_info('sample-job', 0, True)
-        print(myJob)
-        myJobBuilds = myJob.get('builds')
-        for build in myJobBuilds:
-            buildNumber = build.get('number')
-            buildInfo = self.server.get_build_info('sample-job', buildNumber)
-            buildDuration = buildInfo.get('duration')
-            self.buildDurations.append((buildDuration / 1000))
-            self.totalBuildDuration += buildDuration
-            self.numberOfBuilds += 1.0
-            buildTimestamp = buildInfo.get('timestamp')
-            self.buildTimestamps.append(buildTimestamp)
-
     def getJobConfig(self):
         #get the job configuration
         jobs = self.server.get_all_jobs(folder_depth=None)
+        #regex will filter required job
         regex = self.input
         print(regex)
         for job in jobs:
@@ -51,10 +35,12 @@ class DurationMetrics:
             #print(job)
             if re.search(regex, job):
                 print("Matched Job :"+job)
+                #get_job_config will get configuration of jobs
                 myJob = self.server.get_job_config(job)
                 print(self.input)
                 print(self.previousvalue)
                 print(self.updatedvalue)
+                #replace will replace previous value of schedule with new one
                 new = myJob.replace(self.previousvalue, self.updatedvalue)
                 #print(new)
                 myJob = self.server.reconfig_job(job, new)
@@ -69,7 +55,7 @@ class DurationMetrics:
         user = self.server.get_whoami()
         version = self.server.get_version()
         print('Hello %s from Jenkins %s' % (user['fullName'], version))
-        
+
 def main(argv):
     # passing id, pass to login into jenkins and previousvalue, updatedvalue as arguments to set required job schedule
     username = ''
