@@ -69,14 +69,7 @@ class DurationMetrics:
         user = self.server.get_whoami()
         version = self.server.get_version()
         print('Hello %s from Jenkins %s' % (user['fullName'], version))
-
-    def convertTimestamps(self):
-        dates = []
-        for timestamp in self.buildTimestamps:
-            dateTimeObj = datetime.fromtimestamp((timestamp / 1000))
-            dates.append(dateTimeObj)
-        return dates
-
+        
 def main(argv):
     # passing id, pass to login into jenkins and previousvalue, updatedvalue as arguments to set required job schedule
     username = ''
@@ -105,4 +98,5 @@ def main(argv):
     durationMetrics.getJobConfig()
 
 if __name__ == "__main__":
+    #sys args helps passing argumentsas parameter
     main(sys.argv[1:])
