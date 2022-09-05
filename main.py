@@ -83,5 +83,5 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    # sys args helps passing argumentsas parameter
+    # sys args helps passing arguments as parameter
     main(sys.argv[1:])
