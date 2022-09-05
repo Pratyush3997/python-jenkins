@@ -10,11 +10,6 @@ class DurationMetrics:
     previousvalue = ''
     updatedvalue = ''
     input = ''
-    # totalBuildDuration = 0.0
-    # numberOfBuilds = 0.0
-    # buildDurations = []
-    # buildTimestamps = []
-    # server = None
 
     # constructor
     def __init__(self, username, password, previousvalue, updatedvalue, input):
