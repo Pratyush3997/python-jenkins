@@ -4,10 +4,9 @@
   Using Jenkins-Python API functions it will replace existing values with updated values.
 
 ## Modules Used
-  Jenkins - 
-  sys - 
-  getopt - 
-  re - 
+  jenkins - For using Python-Jenkins API functions it is required to import jenkins.
+  sys,getopt - These Modules will help in the authentication of the jenkins server using parameters(UserID & Password) that will be provided.
+  re - For using regex functions re module is necessary.
 
 ## Connection with Jenkins
   For making a connection with jenkins, jenkins IP, Userid and password/token is passed in this fuction.
