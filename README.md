@@ -1,8 +1,13 @@
 # python-jenkins
 
-# modules required : jenkins, sys, getopt, re
+#prerequisite 
+ Jenkins 
 
-# when program is called the main function will get invoked and its gonna pass the command line arguments with help of "sys.argv"
+# modules required 
+ jenkins, sys, getopt, re
+
+# if 
+ when program is called the main function will get invoked and its gonna pass the command line arguments with help of "sys.argv"
 
 # main will take arguments as input, we will provide option for user to input userid and password
 
