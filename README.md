@@ -13,7 +13,7 @@
 
 ## Connection with Jenkins
   For making a connection with jenkins, jenkins IP, Userid and password/token is passed in this fuction.
-  "get_whoami()" will give jenkins admin name & "get_version()" will give version of jenkins.
+  "get_whoami()" will return the current user & "get_version()" will return the version of jenkins.
 
 ## Functionality
   when program is called the main function will get invoked and its gonna pass the arguments with help of "sys.argv".
