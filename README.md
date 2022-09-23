@@ -1,4 +1,7 @@
-# Introduction
+# Description
+  This is a Python script for changing Jenkins job schedule. 
+  After connecting to Jenkins it will fetch all the jobs and using regex filter the required one.
+  Using Jenkins-Python API functions it will replace existing values with updated values.
 
 ## Modules Used
   Jenkins - 
