@@ -1,4 +1,4 @@
-# importing all the modules
+# importing necessary modules
 import re
 import jenkins
 import sys
@@ -38,7 +38,7 @@ class DurationMetrics:
                 print(self.input)
                 print(self.existingvalue)
                 print(self.updatedvalue)
-                # replace will replace previous value of schedule with new one
+                # replace will replace existing value of schedule with new one
                 new = myJob.replace(self.existingvalue, self.updatedvalue)
                 # print(new)
                 # reconfig_job will reconfigure the changes
