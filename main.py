@@ -4,7 +4,7 @@ import jenkins
 import sys
 import getopt
 
-# this function has variables that will be used in the script
+# declaring variables
 class DurationMetrics:
     username = ''
     password = ''
@@ -20,7 +20,7 @@ class DurationMetrics:
         self.updatedvalue = updatedvalue
         self.input = input
 
-    # member function
+    # getting configuration and making changes in the job schedule
     def getJobConfig(self):
         # get the job configuration
         jobs = self.server.get_all_jobs(folder_depth=None)
@@ -57,7 +57,7 @@ class DurationMetrics:
         print('Hello %s from Jenkins %s' % (user['fullName'], version))
 
 def main(argv):
-    # in the main fuction passing, id, password to login into jenkins and existingvalue, updatedvalue as arguments to set required job schedule
+    # passing, id, password to login into jenkins and existingvalue, updatedvalue as arguments to set required job schedule
     username = ''
     password = ''
     existingvalue = sys.argv[5]
