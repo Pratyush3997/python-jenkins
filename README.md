@@ -19,7 +19,7 @@
 ## Functionality
   when program is called the main function will get invoked and its gonna pass the arguments with help of "sys.argv".
   ####
-  ###"get_all_jobs"### will get all the jobs from jenkins. 
+  "get_all_jobs" will get all the jobs from jenkins. 
   ####
   Using "regex" it will filter and the get required jobs, once required job is there, using "get_job_config" we'll get config of the job 
   and using replace function existing value will be replaced with updated value.
