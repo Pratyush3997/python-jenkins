@@ -1,10 +1,10 @@
-# importing necessary modules
 import re
 import jenkins
 import sys
 import getopt
+from datetime import datetime
 
-# declaring variables
+# this function has variables that will be used in the script
 class DurationMetrics:
     username = ''
     password = ''
@@ -20,7 +20,7 @@ class DurationMetrics:
         self.updatedvalue = updatedvalue
         self.input = input
 
-    # getting configuration and making changes in the job schedule
+    # member function
     def getJobConfig(self):
         # get the job configuration
         jobs = self.server.get_all_jobs(folder_depth=None)
@@ -38,26 +38,42 @@ class DurationMetrics:
                 print(self.input)
                 print(self.existingvalue)
                 print(self.updatedvalue)
-                # replace will replace existing value of schedule with new one
-                new = myJob.replace(self.existingvalue, self.updatedvalue)
-                # print(new)
-                # reconfig_job will reconfigure the changes
-                myJob = self.server.reconfig_job(job, new)
-                # print(myJob)
+                if self.existingvalue == "None":
+                    if "<triggers/>" == "":
+                        self.existingvalue = "<triggers/>"
+                        triggers1 = "<triggers><hudson.triggers.TimerTrigger><spec>"+self.updatedvalue+"</spec></hudson.triggers.TimerTrigger></triggers> "
+                        print(triggers1)
+                        new1 = myJob.replace(self.existingvalue, triggers1)
+                        myJob = self.server.reconfig_job(job, new1)
+                    if "<spec/>" or "<spec> </spec>":
+                        self.existingvalue = "<spec/>"
+                        # self.existingvalue "<spec> </spec>"
+                        triggers2 = "<spec>"+self.updatedvalue+"</spec> "
+                        print(triggers2)
+                        new2 = myJob.replace(self.existingvalue, triggers2)
+                        myJob = self.server.reconfig_job(job, new2)
+                else:
+                    # replace will replace previous value of schedule with new one
+                    new = myJob.replace(self.existingvalue, self.updatedvalue)
+                    # print(new)
+                    # reconfig_job will reconfigure the changes
+                    myJob = self.server.reconfig_job(job, new)
+                    # print(myJob)
             else:
                 print("Out of scope jobs:" + job)
 
     def connectToJenkins(self):
         # connect to Jenkins server
-        self.server = jenkins.Jenkins('http://54.202.6.181:8080/', username=self.username, password=self.password)
+        self.server = jenkins.Jenkins('http://35.93.122.162:8080/', username=self.username, password=self.password)
         # will return the current user
         user = self.server.get_whoami()
         # will return the version of jenkins
         version = self.server.get_version()
         print('Hello %s from Jenkins %s' % (user['fullName'], version))
 
-def main(argv):
-    # passing, id, password to login into jenkins and existingvalue, updatedvalue as arguments to set required job schedule
+def main(argv, mystr=None):
+    # in the main fuction passing, id, password to login into jenkins and existingvalue, updatedvalue as arguments to
+    # set required job schedule
     username = ''
     password = ''
     existingvalue = sys.argv[5]
@@ -81,7 +97,7 @@ def main(argv):
             username = arg
         elif opt in ("-p", "--password"):
             password = arg
-    #calling functions
+    # calling functions
     durationMetrics = DurationMetrics(username, password, existingvalue, updatedvalue, input)
     durationMetrics.connectToJenkins()
     durationMetrics.getJobConfig()
