@@ -22,7 +22,7 @@ pipeline {
                 script {
                    sh '''
                         echo ${ExistingSchedule}
-                        python3 main.py -u jenkins123 -p 11c59cee59707984dca624de7714a4b2ea ${ExistingSchedule} ${NewSchedule} ${JobType}
+                        python3 main.py -u Admin -p 11f9898624c4709f4c9b3fb7efa23db5e8 ${ExistingSchedule} ${NewSchedule} ${JobType}
                       '''
                 }
             }
