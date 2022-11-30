@@ -21,8 +21,9 @@ pipeline {
             steps {
                 script {
                    sh '''
+                        pip install python-jenkins
                         echo ${ExistingSchedule}
-                        python3 main.py -u Admin -p 11f9898624c4709f4c9b3fb7efa23db5e8 ${ExistingSchedule} ${NewSchedule} ${JobType}
+                        python3 main.py -u admin -p 11f9898624c4709f4c9b3fb7efa23db5e8 ${ExistingSchedule} ${NewSchedule} ${JobType}
                       '''
                 }
             }
