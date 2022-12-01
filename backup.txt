@@ -74,12 +74,16 @@ class DurationMetrics:
                     if "spec" in xml_values:
                         print("spec found")
                         self.existingvalue = "<spec/>"
-                        #self.existingvalue "<spec> </spec>"
-                        triggers = "<spec>" + self.updatedvalue + "<spec/> "
+                        triggers = "<spec>" + self.updatedvalue + "</spec>"
                         print(triggers)
                         new = myJob.replace(self.existingvalue, triggers)
-                        # print(new2)
                         myJob = self.server.reconfig_job(job, new)
+                        #self.existingvalue "<spec> </spec>"
+                        # triggers = "<spec>" + self.updatedvalue + "<spec/> "
+                        # print(triggers)
+                        # new = myJob.replace(self.existingvalue, triggers)
+                        # # print(new2)
+                        # myJob = self.server.reconfig_job(job, new)
                     elif "triggers" in xml_values:
                         print("Triggers found")
                         self.existingvalue = "<triggers/>"
