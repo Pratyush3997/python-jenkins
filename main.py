@@ -1,8 +1,10 @@
 import re
+from xml.etree import ElementTree
 import jenkins
 import sys
 import getopt
 from datetime import datetime
+import xml.etree.ElementTree as ET
 
 # this function has variables that will be used in the script
 class DurationMetrics:
@@ -11,14 +13,16 @@ class DurationMetrics:
     existingvalue = ''
     updatedvalue = ''
     input = ''
+    mystr = ''
 
     # variables will be passed using this constructor
-    def __init__(self, username, password, existingvalue, updatedvalue, input):
+    def __init__(self, username, password, existingvalue, updatedvalue, input, mystr):
         self.username = username
         self.password = password
         self.existingvalue = existingvalue
         self.updatedvalue = updatedvalue
         self.input = input
+        self.mystr = mystr
 
     # member function
     def getJobConfig(self):
@@ -35,23 +39,49 @@ class DurationMetrics:
                 print("Matched Job :" + job)
                 # get_job_config will get configuration of jobs
                 myJob = self.server.get_job_config(job)
-                print(self.input)
-                print(self.existingvalue)
-                print(self.updatedvalue)
+                tree = ET.fromstring(myJob)              
+                print("Input : ", self.input)
+                print("Existing Value : ", self.existingvalue)
+                print("Updated Value : ", self.updatedvalue)
+
+                # declaring array
+                xml_values = []
+
+                # condition for empty existing value
                 if self.existingvalue == "None":
-                    if "<triggers/>" == "":
-                        self.existingvalue = "<triggers/>"
-                        triggers1 = "<triggers><hudson.triggers.TimerTrigger><spec>"+self.updatedvalue+"</spec></hudson.triggers.TimerTrigger></triggers> "
-                        print(triggers1)
-                        new1 = myJob.replace(self.existingvalue, triggers1)
-                        myJob = self.server.reconfig_job(job, new1)
-                    if "<spec/>" or "<spec> </spec>":
+                    # iterating through config file for PipelineTriggersJobProperty
+                    for node in tree.iter('org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty'):
+                        # print('\n')
+                        for elem in node.iter():
+                            # storing build tags
+                            buildTrigger = elem.tag
+                            # print(type(var1), "var1")
+                            # sorting build values in buildTrigger & storing in xml_values
+                            xml_values.append(buildTrigger)
+                    print(xml_values)
+                  
+                    # searching for spec in xml values
+                    if "spec" in xml_values:
+                        print("spec found")
                         self.existingvalue = "<spec/>"
-                        # self.existingvalue "<spec> </spec>"
-                        triggers2 = "<spec>"+self.updatedvalue+"</spec> "
-                        print(triggers2)
-                        new2 = myJob.replace(self.existingvalue, triggers2)
-                        myJob = self.server.reconfig_job(job, new2)
+                        # storing updated values
+                        checked_updatedValue = "<spec>" + self.updatedvalue + "</spec>"
+                        print(checked_updatedValue)
+                        # replacing existing value with updated value
+                        replace_value1 = myJob.replace(self.existingvalue, checked_updatedValue)
+                        # reconfiguring the config file
+                        myJob = self.server.reconfig_job(job, replace_value1)                      
+                    # searching for triggers in xml values
+                    elif "triggers" in xml_values:
+                        print("Triggers found")
+                        self.existingvalue = "<triggers/>"
+                        # storing updated values
+                        unChecked_updatedValue = "<triggers><hudson.triggers.TimerTrigger><spec>" + self.updatedvalue + "</spec></hudson.triggers.TimerTrigger></triggers> "
+                        print(unChecked_updatedValue)
+                        # replacing existing value with updated value
+                        replace_value2 = myJob.replace(self.existingvalue, unChecked_updatedValue)
+                        # reconfiguring the config file
+                        myJob = self.server.reconfig_job(job, replace_value2)                            
                 else:
                     # replace will replace previous value of schedule with new one
                     new = myJob.replace(self.existingvalue, self.updatedvalue)
@@ -77,7 +107,9 @@ def main(argv, mystr=None):
     username = ''
     password = ''
     existingvalue = sys.argv[5]
+    print(existingvalue)
     updatedvalue = sys.argv[6]
+    print(updatedvalue)
     input = sys.argv[7]
     try:
         # getopt package processes the arguments
@@ -98,11 +130,11 @@ def main(argv, mystr=None):
         elif opt in ("-p", "--password"):
             password = arg
     # calling functions
-    durationMetrics = DurationMetrics(username, password, existingvalue, updatedvalue, input)
+    durationMetrics = DurationMetrics(username, password, existingvalue, updatedvalue, input, mystr)
     durationMetrics.connectToJenkins()
     durationMetrics.getJobConfig()
-
-    # calling main functions
+ 
+# calling main functions
 if __name__ == "__main__":
     # sys args helps passing arguments as parameter
     main(sys.argv[1:])
