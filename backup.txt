@@ -14,7 +14,6 @@ class DurationMetrics:
     existingvalue = ''
     updatedvalue = ''
     input = ''
-    mystr = ''
 
     # totalBuildDuration = 0.0
     # numberOfBuilds = 0.0
@@ -23,13 +22,13 @@ class DurationMetrics:
     # server = None
 
     # variables will be passed using this constructor
-    def __init__(self, username, password, existingvalue, updatedvalue, input, mystr):
+    def __init__(self, username, password, existingvalue, updatedvalue, input):
         self.username = username
         self.password = password
         self.existingvalue = existingvalue
         self.updatedvalue = updatedvalue
         self.input = input
-        self.mystr = mystr
+
 
     # member function
     def getJobConfig(self):
@@ -162,7 +161,7 @@ class DurationMetrics:
         print('Hello %s from Jenkins %s' % (user['fullName'], version))
 
 
-def main(argv, mystr=None):
+def main(argv):
     # in the main fuction passing, id, password to login into jenkins and existingvalue, updatedvalue as arguments to
     # set required job schedule
     username = ''
@@ -191,7 +190,7 @@ def main(argv, mystr=None):
         elif opt in ("-p", "--password"):
             password = arg
     # calling functions
-    durationMetrics = DurationMetrics(username, password, existingvalue, updatedvalue, input, mystr)
+    durationMetrics = DurationMetrics(username, password, existingvalue, updatedvalue, input)
     durationMetrics.connectToJenkins()
     durationMetrics.getJobConfig()
 
