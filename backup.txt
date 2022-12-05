@@ -47,50 +47,69 @@ class DurationMetrics:
                 # get_job_config will get configuration of jobs
                 myJob = self.server.get_job_config(job)
                 tree = ET.fromstring(myJob)
-                for node in tree.iter('org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty'):
-                    # print('\n')
-                    for elem in node.iter():
-                        var1 = elem.tag
-                        print(var1, "var1")
-                        # if not elem.tag == node.tag:
-                        #     print("{}: {}".format(elem.tag, elem.text))
-                            # var2 = elem.text
-                            # print(var2, "var2")
+                # iterating through config file
+                # for node in tree.iter('org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty'):
+                #     # print('\n')
+                #     for elem in node.iter():
+                #         # storing build tags
+                #         var1 = elem.tag
+                #         print(var1, "var1")
+                # if not elem.tag == node.tag:
+                #     print("{}: {}".format(elem.tag, elem.text))
+                # var2 = elem.text
+                # print(var2, "var2")
                 print("Input : ", self.input)
                 print("Existing Value : ", self.existingvalue)
                 print("Updated Value : ", self.updatedvalue)
+
+                # declaring array
                 xml_values = []
+
+                # condition for empty existing value
                 if self.existingvalue == "None":
+                    # iterating through config file for PipelineTriggersJobProperty
                     for node in tree.iter('org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty'):
                         # print('\n')
                         for elem in node.iter():
-                            var1 = elem.tag
-                           # print(type(var1), "var1")
-                            xml_values.append(var1)
+                            # storing build tags
+                            buildTrigger = elem.tag
+                            # print(type(var1), "var1")
+                            # sorting build values in buildTrigger & storing in xml_values
+                            xml_values.append(buildTrigger)
                     print(xml_values)
                     # var = str("<spec/>" == "")
                     # self.existingvalue = var
                     # self.existingvalue = "<spec/>"
+
+                    # searching for spec in xml values
                     if "spec" in xml_values:
                         print("spec found")
                         self.existingvalue = "<spec/>"
-                        triggers = "<spec>" + self.updatedvalue + "</spec>"
-                        print(triggers)
-                        new = myJob.replace(self.existingvalue, triggers)
-                        myJob = self.server.reconfig_job(job, new)
-                        #self.existingvalue "<spec> </spec>"
+                        # storing updated values
+                        checked_updatedValue = "<spec>" + self.updatedvalue + "</spec>"
+                        print(checked_updatedValue)
+                        # replacing existing value with updated value
+                        replace_value1 = myJob.replace(self.existingvalue, checked_updatedValue)
+                        # reconfiguring the config file
+                        myJob = self.server.reconfig_job(job, replace_value1)
+                        # self.existingvalue "<spec> </spec>"
                         # triggers = "<spec>" + self.updatedvalue + "<spec/> "
                         # print(triggers)
                         # new = myJob.replace(self.existingvalue, triggers)
                         # # print(new2)
                         # myJob = self.server.reconfig_job(job, new)
+
+                    # searching for triggers in xml values
                     elif "triggers" in xml_values:
                         print("Triggers found")
                         self.existingvalue = "<triggers/>"
-                        triggers1 = "<triggers><hudson.triggers.TimerTrigger><spec>" + self.updatedvalue + "</spec></hudson.triggers.TimerTrigger></triggers> "
-                        print(triggers1)
-                        new1 = myJob.replace(self.existingvalue, triggers1)
-                        myJob = self.server.reconfig_job(job, new1)
+                        # storing updated values
+                        unChecked_updatedValue = "<triggers><hudson.triggers.TimerTrigger><spec>" + self.updatedvalue + "</spec></hudson.triggers.TimerTrigger></triggers> "
+                        print(unChecked_updatedValue)
+                        # replacing existing value with updated value
+                        replace_value2 = myJob.replace(self.existingvalue, unChecked_updatedValue)
+                        # reconfiguring the config file
+                        myJob = self.server.reconfig_job(job, replace_value2)
                     # for item in xml_values:
                     #     if item == "spec":
                     #         self.existingvalue = "<spec/>"
@@ -110,9 +129,9 @@ class DurationMetrics:
                     #         myJob = self.server.reconfig_job(job, new1)
                     #     else :
                     #         print("Please check Inputs")
-                    #if var1 == "spec":
+                    # if var1 == "spec":
 
-                    #elif var1 == "triggers":
+                    # elif var1 == "triggers":
 
                     # print(new)
                     # print(self.updatedvalue, "new")
