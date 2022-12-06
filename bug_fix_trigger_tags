@@ -1,0 +1,225 @@
+import re
+from xml.etree import ElementTree
+import jenkins
+import sys
+import getopt
+from datetime import datetime
+import xml.etree.ElementTree as ET
+from xml.etree.ElementTree import XML, fromstring
+import lxml.etree as ET2
+# from bs4 import BeautifulSoup
+import xml
+
+
+# this function has variables that will be used in the script
+class DurationMetrics:
+    username = ''
+    password = ''
+    existingvalue = ''
+    updatedvalue = ''
+    input = ''
+
+    # totalBuildDuration = 0.0
+    # numberOfBuilds = 0.0
+    # buildDurations = []
+    # buildTimestamps = []
+    # server = None
+    # variables will be passed using this constructor
+
+    def __init__(self, username, password, existingvalue, updatedvalue, input):
+        self.username = username
+        self.password = password
+        self.existingvalue = existingvalue
+        self.updatedvalue = updatedvalue
+        self.input = input
+
+    # member function
+    def getJobConfig(self):
+        # get the job configuration
+        jobs = self.server.get_all_jobs(folder_depth=None)
+        # regex will filter required job
+        regex = self.input
+        print(regex)
+        for job in jobs:
+            job = job['name']
+            if re.search(regex, job, re.IGNORECASE):
+                print("Matched Job :" + job)
+                # get_job_config will get configuration of jobs
+                myJob = self.server.get_job_config(job)
+                tree = ET.fromstring(myJob)
+                print("Input : ", self.input)
+                print("Existing Value : ", self.existingvalue)
+                print("Updated Value : ", self.updatedvalue)
+                # declaring array
+                xml_values = []
+                # condition for empty existing value
+                # iterating through config file for PipelineTriggersJobProperty
+                for node in tree.iter(
+                        'org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction'):
+                    el = node
+                    # print('\n')
+                    for elem in node.iter():
+                        # storing build tags
+                        # print(elem, "Element")
+                        buildTrigger = elem.tag
+                        if elem.tag == "jobProperties":
+                            item2 = tree.find('jobProperties')
+                            print(item2)
+                            new_subelement = ET.Element("trigger")
+                            # elem.append(new_subelement)
+                            el.insert(1, new_subelement)
+                            print(el, "el")
+                            tree = ET.ElementTree(tree)
+                            print(tree, "trigger")
+                            tree.write('output.xml')
+                            # myJob = self.server.reconfig_job
+                # tree = ET.fromstring(r"C:\Users\pratyush.thorat\PycharmProjects\pythonProjectnewdemo\output.xml")
+                # print(tree, "newtree")
+                # for node in tree.iter('definition'):
+                #     el = node
+                #     # print('\n')
+                #     for elem in node.iter():
+                        # storing build tags
+                        # print(elem, "Element")
+                        # buildTrigger = elem.tag
+                        # print(buildTrigger, "buildTriggers")
+                        # if elem.tag == "definition":
+                        #     item3 = tree.find('definition')
+                        #     print(item3)
+                        #     new_subelement1 = ET.Element("trigger")
+                        #     elem.append(new_subelement1)
+                        #     print(elem, "element")
+                        #     # el.insert(1, new_subelement1)
+                        #     print(el, "el")
+                        #     tree = ET.ElementTree(tree)
+                        #     print(tree, "trigger")
+                            # tree.write('output.xml')
+                            # new = 'output.xml'
+                        # print(type(var1), "var1")
+                        # sorting build values in buildTrigger & storing in xml_values
+                        # xml_values.append(buildTrigger)
+                # tree = (r"C:\Users\burijintirahul.reddy\Documents\GitHub\Jenkins-Grafana\output.xml")
+                # for node in tree.iter("flow-definition"):
+                #     el = node
+                #     item2 = tree.find('flow-definition')
+                #     print(item2)
+                #     new_subelement = ET.Element("trigger")
+                #     el.append(new_subelement)
+                #     tree = ET.ElementTree(tree)
+                #     tree.write('output.xml')
+        # var = str("<spec/>" == "")
+        # self.existingvalue = var
+        # self.existingvalue = "<spec/>"
+        # searching for spec in xml values
+        # print(job)
+        # searching the required job
+        # if re.search(regex, job, re.IGNORECASE):
+        #     print("Matched Job :" + job)
+        #     # get_job_config will get configuration of jobs
+        #     job  = self.server.get_job_config(job)
+        #     tree  = ET.fromstring(job)
+        #     # root = ET.fromstring(job)
+        #     # for child in root:
+        #     #     #print(child.tag, child.attrib)
+        #     #     if child.tag == "actions":
+        #     #         # print("found")
+        #     #         # print({x.tag for x in root.findall(child.tag+"/*")})
+        #     #         x = child
+        #     for element in tree.iter('jobProperties'):
+        #         print(element)
+        #         new_subelement = ET.Element("Trigger")
+        #         # ET.SubElement
+        #         print("Found")
+        #         element.append(new_subelement)
+        #     tree = ET.ElementTree(tree)
+        #     tree.write('output.xml')
+        # print(tree.tag)
+        # for child in root:
+        #     #print(child.tag, child.attrib)
+        #     if child.tag == "actions":
+        #         # print("found")
+        #         # print({x.tag for x in root.findall(child.tag+"/*")})
+        #         for S_child in child:
+        #             print(S_child.tag, S_child.attrib)
+        # for rank in root.iter('actions'):
+        #     print(rank)
+        # #print(myJob)
+        # tree  = ET.fromstring(job)
+        # print(ET.SubElement("script","definition"))
+        # #items = tree.findall('definition')
+        # price = ET.Element("definition")
+        # price.text = 'test'
+        # item = tree.find('definition')
+        # print(item)
+        # item.append(price)
+        # tree.write("job.xml")
+        # print(job)
+        # definition = tree.find('definition')
+        # schedule = ET.Element("H 2 * * *")
+        # definition.append(schedule)
+        # print(myJob)
+        # print(tree)
+        # # print(tree.tag)
+        # # print(tree.attrib)
+        # x = tree.findall('jobProperties')
+        # #print(x)
+        # for node in tree.iter('org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction'):
+        #     print(node)
+        #     for elem in node.iter():
+        #             print(elem)
+        # replace will replace previous value of schedule with new one
+        # new = myJob.replace(self.existingvalue, self.updatedvalue)
+        # myJob = "output.xml"
+        # print(new)
+        # reconfig_job will reconfigure the changes
+        # print(self.existingvalue + "existingvalue",self.updatedvalue + "updatedvalue")
+        # myJob = self.server.reconfig_job(job, myJob)
+        # print(myJob)
+
+    def connectToJenkins(self):
+        # connect to Jenkins server
+        self.server = jenkins.Jenkins('http://35.93.122.162:8080/', username=self.username, password=self.password)
+        # will return the current user
+        user = self.server.get_whoami()
+        # will return the version of jenkins
+        version = self.server.get_version()
+        print('Hello %s from Jenkins %s' % (user['fullName'], version))
+
+
+def main():
+    # in the main fuction passing, id, password to login into jenkins and existingvalue, updatedvalue as arguments to
+    # set required job schedule
+    username = 'admin'
+    password = '11f9898624c4709f4c9b3fb7efa23db5e8'
+    existingvalue = "h 2 * * *"
+    updatedvalue = "* * * * * "
+    input = "QXMgr"
+    # try:
+    #     # getopt package processes the arguments
+    #     # opts help is used here to provide option to enter userID & password that will be entered by the user
+    #     opts, args = getopt.getopt(argv, "hu:p:", ["username=", "password="])
+    # except getopt.GetoptError:
+    #     print
+    #     'python Job-Duration-Metrics.py -u <username> -p <password>'
+    #     sys.exit(2)
+    # for opt, arg in opts:
+    #     # h option will print out the usage
+    #     if opt == '-h':
+    #         print
+    #         'python Job-Duration-Metrics.py -u <username> -p <password>'
+    #         sys.exit()
+    #     elif opt in ("-u", "--username"):
+    #         username = arg
+    #     elif opt in ("-p", "--password"):
+    #         password = arg
+    # # calling functions
+    durationMetrics = DurationMetrics(username, password, existingvalue, updatedvalue, input)
+    durationMetrics.connectToJenkins()
+    durationMetrics.getJobConfig()
+
+    # calling main functions
+
+
+if __name__ == "__main__":
+    # sys args helps passing arguments as parameter
+    main()
